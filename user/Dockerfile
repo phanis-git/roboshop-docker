@@ -13,6 +13,7 @@
 
 FROM node:20.19.6-alpine3.22 AS build
 WORKDIR /opt/server
+EXPOSE 8080
 # COPY package.json .
 # COPY *.js .
 COPY package.json . 
