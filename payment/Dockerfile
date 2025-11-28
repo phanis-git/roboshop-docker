@@ -52,9 +52,10 @@
 
 FROM python:3.9-alpine AS build
 WORKDIR /opt/server
-COPY requirements.txt .
 RUN apk add --no-cache gcc musl-dev python3-dev linux-headers
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY requirements.txt .
+RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
+RUN pip install --prefix=/install uwsgi
 COPY payment.ini .
 COPY *.py .
 
@@ -62,6 +63,7 @@ FROM python:3.9-alpine
 WORKDIR /opt/server
 EXPOSE 8080
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop
+COPY --from=build /install /usr/local
 COPY --from=build /opt/server /opt/server
 RUN chown -R roboshop:roboshop /opt/server
 LABEL project="roboshop" \
@@ -76,3 +78,4 @@ ENV CART_HOST="cart" \
     AMQP_PASS="roboshop123"
 USER roboshop
 CMD ["uwsgi", "--ini", "payment.ini"]
+
