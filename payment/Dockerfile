@@ -26,7 +26,7 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 
-FROM python:3.9-alpine AS build 
+FROM python:3.9-alpine 
 WORKDIR /opt/server
 EXPOSE 8080
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
