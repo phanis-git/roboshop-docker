@@ -25,8 +25,8 @@ FROM maven:3.5-alpine AS build
 WORKDIR /opt/server
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
     chown -R roboshop:roboshop /opt/server
-LABEL com.project="roboshop"
-      component="shipping"
+LABEL com.project="roboshop" \
+      component="shipping" \
       created_by="phani"
 EXPOSE 8080
 ENV CART_ENDPOINT="cart:8080" \

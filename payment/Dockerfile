@@ -31,9 +31,10 @@ WORKDIR /opt/server
 EXPOSE 8080
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
     chown -R roboshop:roboshop /opt/server
-LABEL project="roboshop"
-      component="payment"
+LABEL project="roboshop" \
+      component="payment" \
       created_by="phani"  
+
 ENV CART_HOST="cart" \
     CART_PORT="8080" \
     USER_HOST="user" \

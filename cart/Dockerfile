@@ -22,8 +22,8 @@ FROM node:20.19.6-alpine3.22
 WORKDIR /opt/server
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
     chown -R roboshop:roboshop /opt/server
-LABEL com.project="roboshop"
-      component="cart"
+LABEL com.project="roboshop" \
+      component="cart" \
       created_by="phani" 
 EXPOSE 8080
 ENV REDIS_HOST="redis" \

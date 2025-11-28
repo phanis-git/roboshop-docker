@@ -25,8 +25,8 @@ WORKDIR /opt/server
 RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
     chown -R roboshop:roboshop /opt/server
 EXPOSE 8080
-LABEL project="roboshop"
-      component="user"
+LABEL project="roboshop" \
+      component="user" \
       created_by="phani"  
 ENV MONGO="true" \
     REDIS_UR="redis://redis:6379" \
