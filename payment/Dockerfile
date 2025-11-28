@@ -1,29 +1,29 @@
-# FROM python:3.9
-# EXPOSE 8080
-# WORKDIR /opt/server
-# COPY payment.ini .
-# COPY *.py .
-# COPY requirements.txt .
-# RUN pip3 install -r requirements.txt
-# ENV CART_HOST="cart" \
-#     CART_PORT="8080" \
-#     USER_HOST="user" \
-#     USER_PORT="8080" \
-#     AMQP_HOST="rabbitmq" \
-#     AMQP_USER="roboshop" \
-#     AMQP_PASS="roboshop123"
-# CMD ["uwsgi", "--ini", "payment.ini"]
+FROM python:3.9
+EXPOSE 8080
+WORKDIR /opt/server
+COPY payment.ini .
+COPY *.py .
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+ENV CART_HOST="cart" \
+    CART_PORT="8080" \
+    USER_HOST="user" \
+    USER_PORT="8080" \
+    AMQP_HOST="rabbitmq" \
+    AMQP_USER="roboshop" \
+    AMQP_PASS="roboshop123"
+CMD ["uwsgi", "--ini", "payment.ini"]
 
 
 # Below is the optimized image
 
-# FROM python:3.9-alpine AS build
-# EXPOSE 8080
+# FROM python:3.9 AS build
 # WORKDIR /opt/server
 # COPY payment.ini .
 # COPY *.py .
 # COPY requirements.txt .
-# RUN pip3 install -r requirements.txt
+# # RUN pip3 install -r requirements.txt
+# RUN pip3 install --prefix=/libraries -r requirements.txt
 
 
 # FROM python:3.9-alpine 
@@ -31,6 +31,7 @@
 # EXPOSE 8080
 # RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
 #     chown -R roboshop:roboshop /opt/server
+# RUN apk add --no-cache pcre 
 # LABEL project="roboshop" \
 #       component="payment" \
 #       created_by="phani"  
@@ -42,40 +43,10 @@
 #     AMQP_HOST="rabbitmq" \
 #     AMQP_USER="roboshop" \
 #     AMQP_PASS="roboshop123"
-# COPY --from=build /opt/server /opt/server
+# COPY --from=build /libraries /usr/local
+# COPY payment.ini *.py requirements.txt .
 # USER roboshop
 # CMD ["uwsgi", "--ini", "payment.ini"]
 
 
-
-# chat gpt optimized
-
-FROM python:3.9-alpine AS build
-WORKDIR /opt/server
-RUN apk add --no-cache gcc musl-dev python3-dev linux-headers
-COPY requirements.txt .
-RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
-RUN pip install --prefix=/install uwsgi
-COPY payment.ini .
-COPY *.py .
-
-FROM python:3.9-alpine
-WORKDIR /opt/server
-EXPOSE 8080
-RUN addgroup -S roboshop && adduser -S roboshop -G roboshop
-COPY --from=build /install /usr/local
-COPY --from=build /opt/server /opt/server
-RUN chown -R roboshop:roboshop /opt/server
-LABEL project="roboshop" \
-      component="payment" \
-      created_by="phani"
-ENV CART_HOST="cart" \
-    CART_PORT="8080" \
-    USER_HOST="user" \
-    USER_PORT="8080" \
-    AMQP_HOST="rabbitmq" \
-    AMQP_USER="roboshop" \
-    AMQP_PASS="roboshop123"
-USER roboshop
-CMD ["uwsgi", "--ini", "payment.ini"]
 
