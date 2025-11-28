@@ -22,9 +22,9 @@ RUN npm install
 # after build the above will be deleted only below will be there as final image so we need to do user in second 
 
 FROM node:20.19.6-alpine3.22
-RUN addgroup -S roboshop && adduser -S roboshop -G roboshop
 WORKDIR /opt/server
-RUN chown -R roboshop:roboshop /opt/server
+RUN addgroup -S roboshop && adduser -S roboshop -G roboshop && \
+    chown -R roboshop:roboshop /opt/server
 LABEL com.project="roboshop" \
       component="catalogue" \
       created_by="phani" 
