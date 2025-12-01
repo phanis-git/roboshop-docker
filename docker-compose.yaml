@@ -74,6 +74,11 @@ services:
       - shipping
       - payment
       - user
+networks:
+  default:
+    driver: bridge
+    name: roboshop
+    external: false # true if you have created network manually using docker network command
 volumes:
   mongodb:     # docker volume create mongodb   path /var/lib/docker/volumes     - its a host path
   mysql:
